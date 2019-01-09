@@ -46,3 +46,4 @@ yarn
 	*	Opt #2:
 		*	Make sure you have an `Android emulator` installed and running
 		*	Run `npm run android` in your terminal
+# Me.Organized
