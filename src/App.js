@@ -37,9 +37,21 @@ const Drawer = DrawerNavigator({
       tabBarVisible : false,
       drawerLockMode : 'locked-closed'
     })},
-  TodoList: { screen: TodoList},
-  AboutUs: { screen: AboutUs },
-  NHProfile: { screen: NHProfile }
+  TodoList: { screen: TodoList,
+    navigationOptions: ({navigation}) => ({
+      tabBarVisible : false,
+      drawerLockMode : 'locked-closed'
+    })},
+  AboutUs: { screen: AboutUs,
+    navigationOptions: ({navigation}) => ({
+      tabBarVisible : false,
+      drawerLockMode : 'locked-closed'
+    }) },
+  NHProfile: { screen: NHProfile,
+    navigationOptions: ({navigation}) => ({
+      tabBarVisible : false,
+      drawerLockMode : 'locked-closed'
+    }) }
 },
 {
   initialRouteName: "Login",
