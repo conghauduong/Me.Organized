@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { ListView, Alert } from "react-native";
+import { ListView, Alert,TouchableOpacity } from "react-native";
 import * as firebase from "firebase";
 import {
   Container,
@@ -10,10 +10,13 @@ import {
   Item,
   Input,
   Button,
+  Badge,
+  Color,
   Icon,
   Toast,
   List,
   ListItem,
+  DatePicker,
   Text,
   Left,
   Right,
@@ -21,6 +24,7 @@ import {
   CheckBox
 } from "native-base";
 import styles from "./styles";
+import Dialog, { DialogButton, DialogContent } from 'react-native-popup-dialog';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCc7hSOY8oDB3HrGIXHlg-M6hIZpLFCDhQ",
@@ -51,14 +55,33 @@ class TodoList extends Component {
       listViewData: data,
       listViewCompletedData: completedData,
       newcontact : "",
-      isHidden: false
+      isHidden: false,
+      isImportant: false,
+      visible: false
     };
     this.onPress = this.onPress.bind(this);
+    this.onImportantPress = this.onImportantPress.bind(this);
+    this.showDialog = this.showDialog.bind(this);
+    this.handleCancel =this.handleCancel.bind(this);
   }
+
 
   onPress() {
     this.setState({isHidden: !this.state.isHidden})
   }
+
+  onImportantPress (){
+    this.setState({isImportant: !this.state.isImportant})
+  }
+
+  showDialog () {
+    this.setState({visible: !this.state.visible});
+  };
+ 
+  handleCancel () {
+    this.setState({visible: !this.state.visible});
+  };
+
 
 componentDidMount(){
 var that = this
@@ -128,6 +151,17 @@ async deleteRow(secId, rowId, rowMap,data) {
     }
 
   render() {
+    const importantStar =   <Icon name='star' style={
+      { color: "yellow" }} />
+    const notImportant =   <Icon name='star' style={
+        { color: "red" }} />
+      let message;
+      if (this.state.listViewData.name == "Ok") {
+          message = importantStar
+      } else {
+          message = notImportant
+      }
+
     return (
       <Container style={styles.container}>
         <Header>
@@ -147,13 +181,13 @@ async deleteRow(secId, rowId, rowMap,data) {
         </Header>
 
         <Content>
-        
-          <Form>
-            <Item rounded style={{marginTop : 10, marginBottom: 10, marginLeft: 10, marginRight: 10}}>
-              <Input placeholder="Add new task" 
+        <Form >
+          <Item rounded style={{marginTop : 10, marginBottom: 10, marginLeft: 10, marginRight: 10}}>
+          <Input style = {{color:'black'}}
+              placeholder = 'Add new text'
               onChangeText={(newcontact) => this.setState({newcontact})}
-              />   
-              <Right>
+              />
+              <Right style ={{marginRight: 10}}>
             <Button onPress={this.onHandleSubmit} type="submit"
               transparent
               onPress={() => {
@@ -166,14 +200,13 @@ async deleteRow(secId, rowId, rowMap,data) {
                 } else
                 this.addRow(this.state.newcontact)
                 } 
-              } >
-  
-              <Icon name="add" />
+              }>
+              <Icon style={{color:'black'}} name="add" />
             </Button>  
           </Right>
-            </Item>
-          </Form>
-      
+          </Item>
+        </Form>
+            
           <List
           enableEmptySections
             dataSource={this.ds.cloneWithRows(this.state.listViewData)}
@@ -194,6 +227,17 @@ async deleteRow(secId, rowId, rowMap,data) {
                   {data.val().name}
                   </Text> */}
                 </Body>
+                <Right>
+            
+
+              <Button transparent icon
+              onPress={this.onImportantPress} >
+
+{/* Show up important Star */}
+                {/* {message} */}
+
+          </Button>
+                </Right>
                 
               </ListItem>}
             renderLeftHiddenRow={data =>
